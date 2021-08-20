@@ -1,5 +1,5 @@
-# Obtiene la temperatura promedio mensual en el periodo
-# 1970-2000 con datos de WorldClim.
+# Obtiene la climatología media para 1970-2000 a partir de
+# datos de WorldClim.
 
 import os
 
@@ -11,8 +11,8 @@ origen = "WC"
 path_d = os.getcwd() + "/datos/" + origen + "/"
 path_r = os.getcwd() + "/resultados/" + origen + "/"
 
-# Se enlistan las subcarpetas de WC.
-fdir = os.listdir(path_d)
+# Se enlistan las subcarpetas de WC_nc.
+WC_nc = os.listdir(path_d)
 
 # Año de inicio y de fin de climatología, inclusive.
 with open(os.getcwd() + "/resultados/periodos", "r") as f:
@@ -30,21 +30,33 @@ def pre(ds):
         ds["crs"].encoding["source"][-10:-3], "ns")])
     return ds
 
+ds = []
+var = ["tmax", "tmin"]
+
 # Se obtiene el promedio mensual para cada conjunto de datos.
-for value in fdir: 
+for i, value in enumerate(WC_nc[1:]): 
     # Se cargan y concatenan todos los archivos correspondientes
-    # para cada subcarpeta de WC.
-    with xr.open_mfdataset(
+    # para cada subcarpeta de WC_nc.
+    ds.append(xr.open_mfdataset(
         path_d + value + "\*.nc", combine = "nested",
         concat_dim = "time", parallel = True, preprocess = pre
-        ) as ds:
+        ))
 
-        # Se selecciona el periodo deseado.
-        ds = ds.sel(time = slice(yr_i, yr_f))
+    # Se selecciona el periodo deseado.
+    ds[i] = ds[i].sel(time = slice(yr_i, yr_f))
 
-        # Se obtiene la media mensual.
-        ds = ds.groupby("time.month").mean()
+    ds[i] = ds[i].rename_vars({var[i]: "T"})
+    # Se agrega una dimensión para poder concatenar los archivos.
+    ds[i] = ds[i].expand_dims(num =  [i])
 
-        # Se guarda el netCDF.
-        ds.to_netcdf(path_r + value + "_" + str(yr_i)
-            + "_" + str(yr_f) + "_monthly.nc")
+# Se concatenan los archivos.
+ds_conc = xr.combine_nested(ds, concat_dim = "num")
+# Se promedia la temperatura maxima y mínima.
+ds_conc = ds_conc.mean("num")
+
+# Se obtiene la media mensual.
+ds_conc = ds_conc.groupby("time.month").mean()
+
+# Se guarda el netCDF.
+ds_conc.to_netcdf(path_r + origen + "_clim_" + str(yr_i)
+    + "_" + str(yr_f) + "_monthly.nc")
