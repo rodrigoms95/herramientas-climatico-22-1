@@ -163,17 +163,19 @@ i = 0
 crecimiento[i] = datos.loc[periodos[1, 0]:] / datos.loc[periodos[1, 0]]
 
 # Se crea la gráfica.
+fig, ax = plt.subplots(1, 1)
 crecimiento[i].plot(yticks = np.linspace(
-    0.5, 4.5, 8, endpoint = False))
-plt.grid(axis = "y")
-plt.title("Crecimiento de indicadores económicos\n",
+    0.5, 4.5, 8, endpoint = False), ax = ax)
+ax.grid(axis = "y")
+ax.set_title("Crecimiento de indicadores económicos\n",
     fontsize = "18")
-plt.suptitle(str(int(periodos[1, 0])) + " - " +
+fig.suptitle(str(int(periodos[1, 0])) + " - " +
     str(int(periodos[1, 1])) + " (" + str(int(periodos[1, 0]))
-    + " = 1)", fontsize = "12", y = 0.95)
+    + " = 1)", fontsize = "12", y = 0.925)
+ax.set_ylim(0.5)
 
-plt.savefig(path_r + "indicadores_" + str(int(periodos[1, 0]))
-    + "_" + str(int(periodos[1, 1])) + ".png")
+fig.savefig(path_r + "indicadores_" + str(int(periodos[1, 0]))
+    + "_" + str(int(periodos[1, 1])) + ".png", bbox_inches = "tight")
 
 # Se grafica el periodo proyectado.
 
@@ -184,17 +186,20 @@ crecimiento[i] = ( proyeccion.loc[periodos[2, 0] - 1:]
     / proyeccion.loc[periodos[2, 0] - 1] )
 
 # Se crea la gráfica.
+fig, ax = plt.subplots(1, 1)
 ( crecimiento[i].loc[:, col_d.drop("PIB real")]
-    .plot(yticks = np.linspace(0, 12, 12, endpoint = False)) )
-plt.grid(axis = "y")
-plt.title("Escenario de crecimiento\n" +
+    .plot(yticks = np.linspace(0, 13, 13,
+    endpoint = False), ax = ax ) )
+ax.grid(axis = "y")
+ax.set_title("Escenario de crecimiento\n" +
     "de indicadores económicos\n", fontsize = "18")
-plt.suptitle(str(int(periodos[2, 0]) - 1) + " - " +
+fig.suptitle(str(int(periodos[2, 0]) - 1) + " - " +
     str(int(periodos[2, 1])) + " (" + str(int(periodos[2, 0]) - 1)
     + " = 1)", fontsize = "12", y = 0.95)
+ax.set_ylim(0, 12)
 
-plt.savefig(path_r + "indicadores_" + str(int(periodos[2, 0]) - 1)
-    + "_" + str(int(periodos[2, 1])) + ".png")
+fig.savefig(path_r + "indicadores_" + str(int(periodos[2, 0]) - 1)
+    + "_" + str(int(periodos[2, 1])) + ".png", bbox_inches = "tight")
 
 
 # Se grafican únicamente las tasas de crecimiento e
@@ -203,18 +208,21 @@ plt.savefig(path_r + "indicadores_" + str(int(periodos[2, 0]) - 1)
 i = 1
 
 # Se crea la gráfica.
+fig, ax = plt.subplots(1, 1)
 ( crecimiento[i].loc[:, ["Intensidad energética",
     "Intensidad de carbono", "Emisiones de CO2"]]
-    .plot(yticks = np.linspace(0, 3.5, 7, endpoint = False)) )
-plt.grid(axis = "y")
-plt.title("Escenario de crecimiento de emisiones\n",
+    .plot(yticks = np.linspace(0, 3.5, 7, endpoint = False),
+    ax = ax) )
+ax.grid(axis = "y")
+ax.set_title("Escenario de crecimiento de emisiones\n",
     fontsize = "18")
-plt.suptitle(str(int(periodos[2, 0]) - 1) + " - " +
+fig.suptitle(str(int(periodos[2, 0]) - 1) + " - " +
     str(int(periodos[2, 1])) + " (" + str(int(periodos[2, 0]) - 1)
-    + " = 1)", fontsize = "12", y = 0.95)
+    + " = 1)", fontsize = "12", y = 0.925)
+ax.set_ylim(0)
 
-plt.savefig(path_r + "emisiones_" + str(int(periodos[2, 0]) - 1)
-    + "_" + str(int(periodos[2, 1])) + ".png")
+fig.savefig(path_r + "emisiones_" + str(int(periodos[2, 0]) - 1)
+    + "_" + str(int(periodos[2, 1])) + ".png", bbox_inches = "tight")
 
 
 # Se grafican ambos periodos
@@ -226,18 +234,21 @@ crecimiento[i] = ( pd.concat([datos.loc[periodos[1, 0]:],
     / datos.loc[periodos[1, 0]])
 
 # Se crea la gráfica.
+fig, ax = plt.subplots(1, 1)
 ( crecimiento[i].loc[:, col_d.drop("PIB real")]
-    .plot(yticks = np.linspace(0, 24, 12, endpoint = False)) )
-plt.grid(axis = "y")
-plt.title("Escenario de crecimiento de\n"
+    .plot(yticks = np.linspace(0, 24, 12, endpoint = False),
+    ax = ax ) )
+ax.grid(axis = "y")
+ax.set_title("Escenario de crecimiento de\n"
     + "indicadores económicos\n",
     fontsize = "18")
-plt.suptitle(str(int(periodos[1, 0])) + " - " +
+fig.suptitle(str(int(periodos[1, 0])) + " - " +
     str(int(periodos[2, 1])) + " (" + str(int(periodos[1, 0]))
-    + " = 1)", fontsize = "12", y = 0.95)
+    + " = 1)", fontsize = "12", y = 0.925)
+ax.set_ylim(0)
 
-plt.savefig(path_r + "indicadores_" + str(int(periodos[2, 0]) - 1)
-    + "_" + str(int(periodos[2, 1])) + ".png")
+fig.savefig(path_r + "indicadores_" + str(int(periodos[1, 0]))
+    + "_" + str(int(periodos[2, 1])) + ".png", bbox_inches = "tight")
 
 
 fname = "CO2 emissions.csv"
@@ -332,20 +343,22 @@ def proy_err(var):
     return anomalia
 
 # Se ajusta el modelo a la temperatura observada.
-lmbda[2] = optimize.minimize(proy_err, lmbda[2]).x[0]
+lmbda[2] = optimize.minimize(proy_err, lmbda[2], 
+    options = {"maxiter": 10}).x[0]
 
 # Se evalúa el modelo para los datos históricos.
 proy(historico)
 
 # Sensibilidad del clima.
 with open(path_r + "resultados.txt", "w", encoding = "utf-8") as f:
-    f.write("Lambda 2 ajustado: " + f"{lmbda[2]:.4f}")
+    f.write("Lambda 2 ajustado: " + f"{lmbda[2]:.4f}\n")
     f.write("Sensibilidad del clima: " +
         f"{lmbda[2] * 5.35 * np.log(2):.2f}"
-        + " °C")
+        + " °C\n")
 
 # Se grafican las temperaturas observadas y modeladas.
-ax = t_real.iloc[:,0].plot()
+fig, ax = plt.subplots(1, 1)
+t_real.iloc[:,0].plot(ax = ax)
 historico.loc[1850:, col_m[-2]].plot(ax = ax)
 ax.set_title("Anomalía de temperatura superficial global",
     fontsize = 16)
@@ -354,7 +367,7 @@ ax.set_ylabel("Anomalía de Temperatura [°C]")
 ax.legend(["Anomalía observada",
     "Anomalía modelada"])
 
-plt.savefig(path_r + "anomalia_temp.png")
+fig.savefig(path_r + "anomalia_temp.png", bbox_inches = "tight")
 
 
 # Proyección de escenarios futuros.
