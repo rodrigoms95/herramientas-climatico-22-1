@@ -35,7 +35,6 @@ gdf = gpd.read_file( path_shp )
 
 # Se obtiene el contorno de los municiipios.
 gdf["boundary"] = gdf.boundary
-gdf["Tmax_1995"] = np.nan
 
 # Se establece el datum de los datos.
 ds = ds.rio.write_crs(gdf.crs)

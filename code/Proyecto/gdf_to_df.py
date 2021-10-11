@@ -17,7 +17,7 @@ if not os.path.exists(path_r):
     os.mkdir(path_r)
 
 # Cargamos los municipios.
-gdf = gpd.read_file( path_shp )
+gdf = gpd.read_file(path_shp, encoding='utf8')
 
 # Obtenemos el contorno de los municipios.
 gdf["boundary"] = gdf.boundary
@@ -32,15 +32,14 @@ gdf["lat"] = gdf["centroid"].y
 
 # Columnas a retirar del GeoDataFrame.
 drop = ["CVEGEO", "CVE_ENT", "CVE_MUN",
-    "NOM_MUN", "Area", "PERIMETER", "COV_",
+    "NOM_ENT", "NOM_MUN", "PERIMETER", "COV_",
     "COV_ID", "geometry", "boundary", "centroid"]
 
 # Columnas de variables explicativas.
-cols = ["T_max", "T_min", "T_mean", "Pre", "HDD_mean",
-    "CDD_mean", "HDD_p10", "CDD_p90", "CDD_18",
-    "HDD_18", "Pre_T>Tmean", "Población",
-    "Densidad_población", "PIB", "PCI", "$luz",
-    "$GN", "$GLP"]
+cols = ["Consumo", "T_max", "T_min", "T_mean",
+    "HDD_mean", "CDD_mean", "HDD_p10", "CDD_p90",
+    "Pre", "Pre_T>Tmean", "Densidad_población",
+    "PCI", "$luz", "$GN", "$GLP", "Población", "PIB"]
 
 # Convertimos de GeoDataGrame a DataFrame. 
 df_0 = pd.DataFrame(gdf.drop(drop, axis = 1))
@@ -53,5 +52,8 @@ df = df_0.copy()
 for i in range(1996, 2018):
     df_0["Año"] = i
     df = df.append( df_0, ignore_index = True )
+df = df[[cols[0]] + list(df.columns[1:4])
+    + cols[1:-2] + [df.columns[4]]
+    + cols[-2:] + [df.columns[0]]]
 
-df.to_csv(path_r + "data_0.csv", index = False)
+df.to_csv(path_r + "data_0.csv", index = False, encoding = 'utf8')

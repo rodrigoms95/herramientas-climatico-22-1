@@ -7,9 +7,7 @@ import numpy as np
 import xarray as xr
 
 
-fname = "mexico_Tmax.1995.01.01.tif.nc"
-
-vars = ["Tmax/", "Tmin/"]
+vars = ["Tmax", "Tmin"]
 
 path_d = os.getcwd() + "/datos/CHIRTS/"
 path_r = os.getcwd() + "/resultados/CHIRTS/"
@@ -45,10 +43,10 @@ for T in vars:
         # Se cargan y concatenan todos los archivos correspondientes
         # para cada subcarpeta de año y cada variable.
         ds = xr.open_mfdataset(
-            path_d + T + "/" + str(value) + "\*.nc",
+            path_d + T + "/" + str(value) + "/*.nc",
             combine = "nested", concat_dim = "time",
             parallel = True, preprocess = pre
             )
         # Se guarda el archivo en formato NetCDF.
         ds.to_netcdf(path_r + T + "/"
-            + "mexico_Tmax." + str(value) + ".nc")
+            + "mexico_" + T + "." + str(value) + ".nc")
