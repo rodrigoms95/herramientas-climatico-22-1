@@ -56,9 +56,22 @@ for i in range(gdf.shape[0]):
         gdf[gdf.index == i].geometry,
         gdf.crs, drop=False, invert=False) )
 
+# Para los municipios en los que no cae ningún
+# punto, se relajan las condiciones para
+# considerar cualquier punto que toque.
+for i in range(len(mask)):
+    if ( mask[i].where(mask[i] > -9000)
+        .drop("spatial_ref")
+        .to_dataframe().mean()[0] 
+        ) != 1:
+        
+        mask[i] = mask_0.rio.clip(
+        gdf[gdf.index == i].geometry,
+        gdf.crs, all_touched = True, 
+        drop=False, invert=False)
+
 # Se unen las máscaras para todos los municipios.
 mask = ( xr.concat(mask, dim = "municipio")
     .drop("spatial_ref") )
 mask = mask.where(mask > -9000)
-
 mask.to_netcdf(path_r + "municipios_mask.nc")

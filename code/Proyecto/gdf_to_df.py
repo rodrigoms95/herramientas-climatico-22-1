@@ -2,7 +2,6 @@
 
 import os
 
-
 import pandas as pd
 import numpy as np
 
@@ -49,7 +48,7 @@ df_0[cols] = np.nan
 
 # Agregamos una fila para cada año en cada municipio.
 df = df_0.copy()
-for i in range(1996, 2018):
+for i in range(1996, 2017):
     df_0["Año"] = i
     df = df.append( df_0, ignore_index = True )
 df = df[[cols[0]] + list(df.columns[1:4])
