@@ -37,7 +37,7 @@ drop = ["CVEGEO", "CVE_ENT", "CVE_MUN",
 # Columnas de variables explicativas.
 cols = ["Consumo", "T_max", "T_min", "T_mean",
     "HDD_mean", "CDD_mean", "HDD_p10", "CDD_p90",
-    "Pre", "Pre_T>Tmean", "Densidad_población",
+    "Pre", "Pre_Tmean", "Densidad_población",
     "PCI", "$luz", "$GN", "$GLP", "Población", "PIB"]
 
 # Convertimos de GeoDataGrame a DataFrame. 
@@ -55,4 +55,5 @@ df = df[[cols[0]] + list(df.columns[1:4])
     + cols[1:-2] + [df.columns[4]]
     + cols[-2:] + [df.columns[0]]]
 
-df.to_csv(path_r + "data_0.csv", index = False, encoding = 'utf8')
+df.to_csv(path_r + "data_0.csv",
+    index = False, encoding = 'utf8')

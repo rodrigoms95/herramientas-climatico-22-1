@@ -31,7 +31,7 @@ def pre(ds):
         ( ds[var].encoding["source"]
         [Range[0]:Range[1]].replace(".", "-")
         ), "ns") ] )
-       .rename_vars({"Band1": "Tmax"} ) )
+       .rename_vars({"Band1": T} ) )
     return ds
 
 # Se obtiene el promedio mensual para cada conjunto de datos.

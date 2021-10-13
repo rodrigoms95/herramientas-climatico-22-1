@@ -26,11 +26,15 @@ with xr.open_dataset( path_d + vars[0] + "/mexico_"
     ds = xr.ones_like(
         ds_max.mean(dim = "time")
         .assign_coords({"time": np.datetime64("1994")} )
-        )
+        ).rename_vars(Tmax = vars[2])
 
 
 # Calculamos la temperatura media anual.
 for j in range(1995, 2017):
+    # Si no existe la carpeta, la crea.
+    if not os.path.exists(path_d + vars[2]):
+        os.mkdir(path_d + vars[2])
+    
     # Abrimos la temperatura máxima.
     with xr.open_dataset( path_d + vars[0] + "/mexico_" 
         + vars[0] + "." + str(j) + ".nc" ) as ds_max:
@@ -40,8 +44,14 @@ for j in range(1995, 2017):
             + vars[1] + "." + str(j) + ".nc" ) as ds_min:
             ds_min = ds_min.where(ds_min > -9000)
         
+        ds_mean = ( ( ( ds_max + (ds_min
+            .rename_vars(Tmin = vars[0])) ) / 2 )
+            .rename_vars(Tmax = vars[2]) )
+        ds_mean.to_netcdf(path_d + vars[2] + "/mexico_" 
+            + vars[2] + "." + str(j) + ".nc" )
+
         # Concatenamos las temperaturas medias.
-        ds = xr.concat( [ds, ( ( ( ds_max + ds_min ) / 2 )
+        ds = xr.concat( [ds, ( ds_mean
             .mean(dim = "time")
             .assign_coords({"time": np.datetime64(str(j))} )
             ) ], dim = "time" )
