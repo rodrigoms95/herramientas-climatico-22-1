@@ -14,6 +14,8 @@ mask = ( xr.open_dataset(path_mask)
 
 for i in files:
     with xr.open_dataset(path + i) as ds:
+        # Establecemos np.nan como valor sin datos.
+        ds = ds.where(ds > -9000)
         # Renombrar variables.
         ds = ds.rename({"latitude": "lat",
             "longitude": "lon", "precip": "Pre"})

@@ -30,30 +30,29 @@ gdf["lat"] = gdf["centroid"].y
 
 
 # Columnas a retirar del GeoDataFrame.
-drop = ["CVEGEO", "CVE_ENT", "CVE_MUN",
-    "NOM_ENT", "NOM_MUN", "PERIMETER", "COV_",
+drop = ["CVEGEO", "PERIMETER", "COV_",
     "COV_ID", "geometry", "boundary", "centroid"]
 
 # Columnas de variables explicativas.
-cols = ["Consumo", "T_max", "T_min", "T_mean",
+cols = ["Consumo", "Usuarios", "T_max", "T_min", "T_mean",
     "HDD_mean", "CDD_mean", "HDD_p10", "CDD_p90",
     "Pre", "Pre_Tmean", "Densidad_población",
-    "PCI", "$luz", "$GN", "$GLP", "Población", "PIB"]
+    "PCI", "$luz", "$GLP", "Población", "PIB"]
 
-# Convertimos de GeoDataGrame a DataFrame. 
+# Convertimos de GeoDataFrame a DataFrame. 
 df_0 = pd.DataFrame(gdf.drop(drop, axis = 1))
-df_0["Municipio"] = df_0.index
-df_0["Año"] = 1995
+df_0["Año"] = 2010
 df_0[cols] = np.nan
 
 # Agregamos una fila para cada año en cada municipio.
 df = df_0.copy()
-for i in range(1996, 2017):
+for i in range(2011, 2017):
     df_0["Año"] = i
     df = df.append( df_0, ignore_index = True )
-df = df[[cols[0]] + list(df.columns[1:4])
-    + cols[1:-2] + [df.columns[4]]
-    + cols[-2:] + [df.columns[0]]]
+df = df[ list(df.columns[0:4]) + cols[0:2]
+    + list(df.columns[5:7]) + cols[2:-2]
+    + cols[-2:] + list(df.columns[7:8])
+    + list(df.columns[4:5]) ]
 
 df.to_csv(path_r + "data_0.csv",
     index = False, encoding = 'utf8')
