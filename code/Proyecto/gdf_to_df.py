@@ -34,7 +34,8 @@ drop = ["CVEGEO", "PERIMETER", "COV_",
     "COV_ID", "geometry", "boundary", "centroid"]
 
 # Columnas de variables explicativas.
-cols = ["Consumo", "Usuarios", "T_max", "T_min", "T_mean",
+cols = ["Consumo_1", "Usuarios_1", "Consumo_DAC",
+    "Usuarios_DAC", "T_max", "T_min", "T_mean",
     "HDD_mean", "CDD_mean", "HDD_p10", "CDD_p90",
     "Pre", "Pre_Tmean", "Densidad_población",
     "PCI", "$luz", "$GLP", "Población", "PIB"]
@@ -49,8 +50,8 @@ df = df_0.copy()
 for i in range(2011, 2017):
     df_0["Año"] = i
     df = df.append( df_0, ignore_index = True )
-df = df[ list(df.columns[0:4]) + cols[0:2]
-    + list(df.columns[5:7]) + cols[2:-2]
+df = df[ list(df.columns[0:4]) + cols[0:4]
+    + list(df.columns[5:7]) + cols[4:-2]
     + cols[-2:] + list(df.columns[7:8])
     + list(df.columns[4:5]) ]
 
